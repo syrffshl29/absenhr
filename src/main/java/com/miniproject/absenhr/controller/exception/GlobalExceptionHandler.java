@@ -7,50 +7,51 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponseDto> handleRuntimeException(
-            RuntimeException ex) {
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(
+            BusinessException ex) {
 
-        ErrorResponseDto response =
-                new ErrorResponseDto(
-                        false,
-                        ex.getMessage()
-                );
+        ErrorResponse response = new ErrorResponse();
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(response);
+        response.setTimestamp(LocalDateTime.now());
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setMessage(ex.getMessage());
+
+        return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> handleUserNotFound(
-            UsernameNotFoundException ex) {
+    @ExceptionHandler({
+            ResourceNotFoundException.class,
+            UsernameNotFoundException.class
+    })
+    public ResponseEntity<ErrorResponse> handleNotFoundException(
+            Exception ex) {
 
-        ErrorResponseDto response =
-                new ErrorResponseDto(
-                        false,
-                        ex.getMessage()
-                );
+        ErrorResponse response = new ErrorResponse();
 
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+        response.setTimestamp(LocalDateTime.now());
+        response.setStatus(HttpStatus.NOT_FOUND.value());
+        response.setMessage(ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(response);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDto> handleException(
+    public ResponseEntity<ErrorResponse> handleException(
             Exception ex) {
 
-        ErrorResponseDto response =
-                new ErrorResponseDto(
-                        false,
-                        "Internal Server Error"
-                );
+        ErrorResponse response = new ErrorResponse();
 
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        response.setTimestamp(LocalDateTime.now());
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.setMessage(ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(response);
     }
 }

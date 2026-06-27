@@ -3,30 +3,18 @@ package com.miniproject.absenhr.core.dto.response;
 import com.miniproject.absenhr.model.enums.AttendanceStatus;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+import java.time.LocalTime;
 
 public class AttendanceResponseDto {
     private Long id;
     private LocalDate attendanceDate;
-    private LocalDateTime checkInTime;
-    private LocalDateTime checkOutTime;
+    private LocalTime checkInTime;
+    private LocalTime checkOutTime;
     private String location;
     private AttendanceStatus status;
 
     public AttendanceResponseDto() {
-    }
-
-    public AttendanceResponseDto(Long id,
-                                 LocalDate attendanceDate,
-                                 LocalDateTime checkInTime,
-                                 LocalDateTime checkOutTime,
-                                 AttendanceStatus status) {
-        this.id = id;
-        this.attendanceDate = attendanceDate;
-        this.checkInTime = checkInTime;
-        this.checkOutTime = checkOutTime;
-        this.location = location;
-        this.status = status;
     }
 
     public Long getId() {
@@ -45,19 +33,19 @@ public class AttendanceResponseDto {
         this.attendanceDate = attendanceDate;
     }
 
-    public LocalDateTime getCheckInTime() {
+    public LocalTime getCheckInTime() {
         return checkInTime;
     }
 
-    public void setCheckInTime(LocalDateTime checkInTime) {
+    public void setCheckInTime(LocalTime checkInTime) {
         this.checkInTime = checkInTime;
     }
 
-    public LocalDateTime getCheckOutTime() {
+    public LocalTime getCheckOutTime() {
         return checkOutTime;
     }
 
-    public void setCheckOutTime(LocalDateTime checkOutTime) {
+    public void setCheckOutTime(LocalTime checkOutTime) {
         this.checkOutTime = checkOutTime;
     }
 

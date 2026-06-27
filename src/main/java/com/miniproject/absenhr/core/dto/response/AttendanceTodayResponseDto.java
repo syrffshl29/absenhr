@@ -1,17 +1,17 @@
 package com.miniproject.absenhr.core.dto.response;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class AttendanceTodayResponseDto {
 
     private String employeeCode;
     private String fullName;
     private String status;
-    private LocalDateTime checkInTime;
-    private LocalDateTime checkOutTime;
+    private LocalDate attendanceDate;
+    private LocalTime checkInTime;
+    private LocalTime checkOutTime;
     private String location;
-
-    // getter setter
 
     public String getEmployeeCode() {
         return employeeCode;
@@ -37,19 +37,27 @@ public class AttendanceTodayResponseDto {
         this.status = status;
     }
 
-    public LocalDateTime getCheckInTime() {
+    public LocalDate getAttendanceDate() {
+        return attendanceDate;
+    }
+
+    public void setAttendanceDate(LocalDate attendanceDate) {
+        this.attendanceDate = attendanceDate;
+    }
+
+    public LocalTime getCheckInTime() {
         return checkInTime;
     }
 
-    public void setCheckInTime(LocalDateTime checkInTime) {
+    public void setCheckInTime(LocalTime checkInTime) {
         this.checkInTime = checkInTime;
     }
 
-    public LocalDateTime getCheckOutTime() {
+    public LocalTime getCheckOutTime() {
         return checkOutTime;
     }
 
-    public void setCheckOutTime(LocalDateTime checkOutTime) {
+    public void setCheckOutTime(LocalTime checkOutTime) {
         this.checkOutTime = checkOutTime;
     }
 

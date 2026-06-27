@@ -1,5 +1,7 @@
 package com.miniproject.absenhr.service;
 
+import com.miniproject.absenhr.controller.exception.BusinessException;
+import com.miniproject.absenhr.controller.exception.ResourceNotFoundException;
 import com.miniproject.absenhr.core.dto.response.*;
 import com.miniproject.absenhr.core.service.AttendanceService;
 import com.miniproject.absenhr.model.Attendance;
@@ -10,7 +12,6 @@ import com.miniproject.absenhr.repository.AttendanceRepository;
 import com.miniproject.absenhr.repository.EmployeeRepository;
 import com.miniproject.absenhr.repository.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -41,12 +42,14 @@ public class AttendanceServiceImpl implements AttendanceService {
         this.modelMapper = modelMapper;
     }
 
+    @Override
     public void checkIn(String username, String location) {
+
         Users user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
         Employee employee = employeeRepository.findByUser(user)
-                .orElseThrow(() -> new UsernameNotFoundException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
         LocalDate today = LocalDate.now();
 
@@ -57,16 +60,20 @@ public class AttendanceServiceImpl implements AttendanceService {
                 );
 
         if (existingAttendance.isPresent()) {
-            throw new RuntimeException("Anda sudah check in hari ini");
+            throw new BusinessException("Anda sudah check in hari ini");
         }
+
         Attendance attendance = new Attendance();
+
         attendance.setEmployee(employee);
-        attendance.setAttendanceDate(LocalDate.now());
+        attendance.setAttendanceDate(today);
         attendance.setLocation(location);
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalTime now = LocalTime.now();
+
         attendance.setCheckInTime(now);
-        if (now.toLocalTime().isAfter(LocalTime.of(8, 0))) {
+
+        if (now.isAfter(LocalTime.of(8, 0))) {
             attendance.setStatus(AttendanceStatus.Late);
         } else {
             attendance.setStatus(AttendanceStatus.Present);
@@ -78,23 +85,23 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public void checkOut(String username) {
         Users user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Employee employee = employeeRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
         LocalDate today = LocalDate.now();
 
         Attendance attendance = attendanceRepository
                 .findByEmployeeAndAttendanceDate(employee, today)
                 .orElseThrow(() ->
-                        new RuntimeException("Anda belum check in hari ini"));
+                        new BusinessException("Anda belum check in hari ini"));
 
         if (attendance.getCheckOutTime() != null) {
-            throw new RuntimeException("Anda sudah check out");
+            throw new BusinessException("Anda sudah check out");
         }
 
-        attendance.setCheckOutTime(LocalDateTime.now());
+        attendance.setCheckOutTime(LocalTime.now());
 
         attendanceRepository.save(attendance);
     }
@@ -103,10 +110,10 @@ public class AttendanceServiceImpl implements AttendanceService {
     public List<AttendanceResponseDto> getAttendanceHistory(String username) {
 
         Users user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Employee employee = employeeRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
         List<Attendance> attendances =
                 attendanceRepository.findByEmployee(employee);
@@ -198,6 +205,9 @@ public class AttendanceServiceImpl implements AttendanceService {
                     dto.setStatus(
                             attendance.getStatus().name());
 
+                    dto.setAttendanceDate(
+                            attendance.getAttendanceDate());
+
                     dto.setCheckInTime(
                             attendance.getCheckInTime());
 
@@ -220,11 +230,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         Users user = userRepository.findByUsername(username)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found"));
+                        new ResourceNotFoundException("User not found"));
 
         Employee employee = employeeRepository.findByUser(user)
                 .orElseThrow(() ->
-                        new RuntimeException("Employee not found"));
+                        new ResourceNotFoundException("Employee not found"));
 
         List<Attendance> attendances =
                 attendanceRepository.findByEmployeeAndAttendanceDateBetween(
@@ -266,7 +276,23 @@ public class AttendanceServiceImpl implements AttendanceService {
                     dto.setFullName(
                             attendance.getEmployee().getFullName());
 
+                    dto.setAttendanceDate(
+                            attendance.getAttendanceDate());
+
+                    dto.setCheckInTime(
+                            attendance.getCheckInTime());
+
+                    dto.setCheckOutTime(
+                            attendance.getCheckOutTime());
+
+                    dto.setStatus(
+                            attendance.getStatus());
+
+                    dto.setLocation(
+                            attendance.getLocation());
+
                     return dto;
+
                 })
                 .toList();
     }
@@ -343,11 +369,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         Users user = userRepository.findByUsername(username)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found"));
+                        new ResourceNotFoundException("User not found"));
 
         Employee employee = employeeRepository.findByUser(user)
                 .orElseThrow(() ->
-                        new RuntimeException("Employee not found"));
+                        new ResourceNotFoundException("Employee not found"));
 
         List<Attendance> attendances =
                 attendanceRepository.findByEmployee(employee);

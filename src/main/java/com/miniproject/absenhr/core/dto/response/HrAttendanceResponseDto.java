@@ -3,11 +3,14 @@ package com.miniproject.absenhr.core.dto.response;
 import com.miniproject.absenhr.model.enums.AttendanceStatus;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class HrAttendanceResponseDto {
     private String employeeCode;
     private String fullName;
     private LocalDate attendanceDate;
+    private LocalTime checkInTime;
+    private LocalTime checkOutTime;
     private AttendanceStatus status;
     private String location;
 
@@ -33,6 +36,22 @@ public class HrAttendanceResponseDto {
 
     public void setAttendanceDate(LocalDate attendanceDate) {
         this.attendanceDate = attendanceDate;
+    }
+
+    public LocalTime getCheckInTime() {
+        return checkInTime;
+    }
+
+    public void setCheckInTime(LocalTime checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public LocalTime getCheckOutTime() {
+        return checkOutTime;
+    }
+
+    public void setCheckOutTime(LocalTime checkOutTime) {
+        this.checkOutTime = checkOutTime;
     }
 
     public AttendanceStatus getStatus() {

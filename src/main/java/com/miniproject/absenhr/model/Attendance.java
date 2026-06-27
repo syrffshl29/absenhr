@@ -5,7 +5,7 @@ import com.miniproject.absenhr.model.enums.AttendanceStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 @Entity
@@ -21,10 +21,10 @@ public class Attendance {
     private LocalDate attendanceDate;
 
     @Column (name = "check_in_time")
-    private LocalDateTime checkInTime;
+    private LocalTime checkInTime;
 
     @Column (name = "check_out_time")
-    private LocalDateTime checkOutTime;
+    private LocalTime checkOutTime;
 
     @Column (name = "location" , length = 255)
     private String location;
@@ -52,19 +52,19 @@ public class Attendance {
         this.attendanceDate = attendanceDate;
     }
 
-    public LocalDateTime getCheckInTime() {
+    public LocalTime getCheckInTime() {
         return checkInTime;
     }
 
-    public void setCheckInTime(LocalDateTime checkInTime) {
+    public void setCheckInTime(LocalTime checkInTime) {
         this.checkInTime = checkInTime;
     }
 
-    public LocalDateTime getCheckOutTime() {
+    public LocalTime getCheckOutTime() {
         return checkOutTime;
     }
 
-    public void setCheckOutTime(LocalDateTime checkOutTime) {
+    public void setCheckOutTime(LocalTime checkOutTime) {
         this.checkOutTime = checkOutTime;
     }
 

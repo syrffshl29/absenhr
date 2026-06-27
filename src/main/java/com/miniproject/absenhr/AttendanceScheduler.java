@@ -24,8 +24,8 @@ public class AttendanceScheduler {
         this.employeeRepository = employeeRepository;
     }
 
-    @Scheduled(fixedRate = 60000)
-//            (cron = "0 59 23 * * *")
+    @Scheduled(cron = "0 59 23 * * *")
+//
     public void markAbsentEmployees() {
 
         LocalDate today = LocalDate.now();

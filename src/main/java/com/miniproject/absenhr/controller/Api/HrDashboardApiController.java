@@ -87,4 +87,8 @@ public class HrDashboardApiController {
                         MediaType.APPLICATION_OCTET_STREAM)
                 .body(excel);
     }
+    @GetMapping("/attendance/all")
+    public List<HrAttendanceResponseDto> getAllAttendanceReport() {
+        return attendanceService.getAllAttendanceReport();
+    }
 }

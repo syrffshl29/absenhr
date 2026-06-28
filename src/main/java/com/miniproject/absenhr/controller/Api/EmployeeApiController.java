@@ -5,6 +5,7 @@ import com.miniproject.absenhr.core.dto.response.ApiResponseDto;
 import com.miniproject.absenhr.core.dto.response.EmployeeResponseDto;
 import com.miniproject.absenhr.core.service.EmployeeService;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class EmployeeApiController {
 
     @PostMapping
     public EmployeeResponseDto create(@RequestBody EmployeeRequestDto dto) {
-        System.out.println(">>> CONTROLLER MASUK");
+        System.out.println();
         System.out.println(dto);
         return employeeService.create(dto);
     }
@@ -78,7 +79,7 @@ public class EmployeeApiController {
 
         return new ApiResponseDto(
                 true,
-                "Employee deleted successfully"
-        );
+                "Employee deleted successfully");
     }
+
 }

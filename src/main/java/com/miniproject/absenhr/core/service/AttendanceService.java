@@ -25,4 +25,5 @@ public interface AttendanceService {
     DashboardEmployeeResponseDto getEmployeeDashboard(
             String username);
     List<LateSummaryResponseDto> getLateSummary();
+    List<HrAttendanceResponseDto> getAllAttendanceReport();
 }

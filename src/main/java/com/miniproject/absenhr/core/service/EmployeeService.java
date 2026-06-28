@@ -24,4 +24,8 @@ public interface EmployeeService {
             String employeeCode,
             String fullName);
     void delete(Long id);
+    EmployeeResponseDto getProfile(String username);
+    EmployeeResponseDto updateProfile(
+            String username,
+            EmployeeRequestDto dto);
 }

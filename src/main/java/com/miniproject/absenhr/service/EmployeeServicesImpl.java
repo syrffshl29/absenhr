@@ -110,21 +110,26 @@ public class EmployeeServicesImpl implements EmployeeService {
                 .orElseThrow(() ->
                         new RuntimeException("Employee not found"));
 
-        employee.setEmployeeCode(dto.getEmployeeCode());
+
         employee.setFullName(dto.getFullName());
         employee.setAddress(dto.getAddress());
         employee.setEmail(dto.getEmail());
         employee.setPhone(dto.getPhone());
 
-        Employee updated =
-                employeeRepository.save(employee);
+        Users users = employee.getUser();
+        users.setUsername(dto.getUsername());
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            users.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        userRepository.save(users);
+        Employee updated = employeeRepository.save(employee);
 
         return modelMapper.map(
                 updated,
                 EmployeeResponseDto.class
         );
     }
-
     @Override
     public List<EmployeeResponseDto> search(String keyword) {
 
@@ -196,5 +201,50 @@ public class EmployeeServicesImpl implements EmployeeService {
         if (user != null) {
             userRepository.delete(user);
         }
+    }
+    @Override
+    public EmployeeResponseDto getProfile(String username) {
+
+        Users user = userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        Employee employee = employeeRepository.findByUser(user)
+                .orElseThrow(() ->
+                        new RuntimeException("Employee not found"));
+
+        return modelMapper.map(employee, EmployeeResponseDto.class);
+    }
+    @Override
+    public EmployeeResponseDto updateProfile(
+            String username,
+            EmployeeRequestDto dto) {
+
+        Users user = userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        Employee employee = employeeRepository.findByUser(user)
+                .orElseThrow(() ->
+                        new RuntimeException("Employee not found"));
+
+        employee.setFullName(dto.getFullName());
+        employee.setAddress(dto.getAddress());
+        employee.setEmail(dto.getEmail());
+        employee.setPhone(dto.getPhone());
+
+        user.setUsername(dto.getUsername());
+
+        if (dto.getPassword() != null &&
+                !dto.getPassword().isBlank()) {
+
+            user.setPassword(
+                    passwordEncoder.encode(dto.getPassword()));
+        }
+
+        userRepository.save(user);
+        employeeRepository.save(employee);
+
+        return modelMapper.map(employee, EmployeeResponseDto.class);
     }
 }

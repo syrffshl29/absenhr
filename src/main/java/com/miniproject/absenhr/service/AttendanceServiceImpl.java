@@ -430,4 +430,10 @@ public class AttendanceServiceImpl implements AttendanceService {
                 })
                 .toList();
     }
+    @Override
+    public List<HrAttendanceResponseDto> getAllAttendanceReport() {
+        return attendanceRepository.findAll().stream()
+                .map(att -> modelMapper.map(att, HrAttendanceResponseDto.class))
+                .toList();
+    }
 }
